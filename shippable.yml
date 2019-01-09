@@ -8,19 +8,16 @@ runtime:
   nodePool: custom__aarch64__Ubuntu_16_04
   
 services:
-  #- cassandra 
-  - couchdb 
-  - elasticsearch 
-  - memcached 
-  - mongodb 
-  #- mysql 
-  - neo4j 
-  - postgres 
-  - rabbitmq 
-  - redis  
-  #- riak 
-  - selenium 
-  - sqlite
+  - couchdb #1.6.0
+  - elasticsearch #6.2.4
+  - memcached #1.4.25 
+  - mongo #3.6.4 
+  - neo4j #3.3.5 
+  - postgres #9.5.12
+  - rabbitmq #3.6.15 
+  - redis #4.0.9 
+  - selenium #3.11.0 
+  - sqlite #3.11.0
   
 build:
   pre_ci_boot:
@@ -45,24 +42,22 @@ build:
     - echo SHIPPABLE_SQLITE_BINARY=$SHIPPABLE_SQLITE_BINARY
 
     - memcached -V
+    - which mysql
+    - mysql -V #|| true
+    - which sqlite3 #|| true    
+    - java -jar /usr/local/selenium/selenium-server-standalone-3.11.0.jar --version
+    - sqlite3 --version
     - psql --version
-    - redis-server -v
-    - which sqlite3 #|| true
-    
-    - python --version
-    - node --version
-    - git lfs version
-    - javac -version
-    #- ruby --version
-    - gcloud version
-    - aws --version
-    - az --version
-    - jfrog --version
-    - terraform -version
-    - packer --version
-    - jq --version
-    - kubectl version --client
-    - docker --version
+    - redis-server --version
+    - riak version
+    - dpkg -s rabbitmq-server | grep Version
+    #- yum list rabbitmq-server | grep rabbitmq-serve #for c7all rabbitmq version
+    - mongod --version
+    - elasticsearch --version
+    - sleep 5
+    - curl http://127.0.0.1:5984
+    - pip show pycrypto    
+    - docker pull shippabledocker/sample_node_pvt:ecr
     
 integrations:
     
